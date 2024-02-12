@@ -7,11 +7,14 @@ import {
   DialogTitle,
   FormControl,
   Grid,
+  IconButton,
   Stack,
   TextField,
   Typography,
 } from "@mui/material";
 import { usePaymentInputs } from "react-payment-inputs";
+// ICONS
+import CloseIcon from "@mui/icons-material/Close";
 
 import { getFormatedNumberWithCommas } from "../helpers/Strings";
 
@@ -57,6 +60,17 @@ const PaymentModal = ({ open, onClose }) => {
   return (
     <Dialog open={open} onClose={onClose}>
       <DialogTitle>Payment Details</DialogTitle>
+      <IconButton
+        aria-label="close"
+        onClick={onClose}
+        sx={{
+          position: "absolute",
+          right: 8,
+          top: 8,
+        }}
+      >
+        <CloseIcon />
+      </IconButton>
       <DialogContent>
         <div>
           <Grid container spacing={2}>
