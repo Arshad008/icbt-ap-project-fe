@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   Autocomplete,
   Button,
@@ -12,6 +12,7 @@ import {
 import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterMoment } from "@mui/x-date-pickers/AdapterMoment";
 import moment from "moment/moment";
+import PaymentModal from "../../components/PaymentModal";
 
 const styles = {
   containerStyles: {
@@ -23,6 +24,12 @@ const styles = {
 };
 
 const Home = () => {
+  const [isPaymentModalOpen, setPaymentModalOpen] = useState(false);
+
+  const togglePaymentModal = () => {
+    setPaymentModalOpen(!isPaymentModalOpen);
+  };
+
   return (
     <div style={styles.containerStyles}>
       <div style={{ maxWidth: "600px", padding: "15px" }}>
@@ -60,7 +67,11 @@ const Home = () => {
                 </FormControl>
               </Grid>
               <Grid item xs={12}>
-                <Button fullWidth variant="outlined">
+                <Button
+                  fullWidth
+                  variant="outlined"
+                  onClick={togglePaymentModal}
+                >
                   Book Now
                 </Button>
               </Grid>
@@ -68,6 +79,9 @@ const Home = () => {
           </CardContent>
         </Card>
       </div>
+      {isPaymentModalOpen ? (
+        <PaymentModal open={isPaymentModalOpen} onClose={togglePaymentModal} />
+      ) : null}
     </div>
   );
 };
