@@ -10,6 +10,7 @@ import AppHeader from "./components/AppHeader";
 import Login from "./pages/login/Login";
 import Home from "./pages/home/Home";
 import UserRegistration from "./pages/register/UserRegistration";
+import UserProfile from "./pages/user/UserProfile";
 
 const App = () => {
   return (
@@ -21,6 +22,7 @@ const App = () => {
             <Route index element={<Home />} />
             <Route path="login" element={<Login />} />
             <Route path="register" element={<UserRegistration />} />
+            <Route path="profile" element={<UserProfile />} />
           </Routes>
         </BrowserRouter>
       </div>
