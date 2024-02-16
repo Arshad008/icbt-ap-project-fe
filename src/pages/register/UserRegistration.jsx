@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   Button,
@@ -18,10 +18,9 @@ import { AdapterMoment } from "@mui/x-date-pickers/AdapterMoment";
 import moment from "moment/moment";
 
 import { isEmailValid } from "../../helpers/Strings";
-import { Api, apiPaths } from '../../api';
+import { Api, apiPaths } from "../../api";
 import { StoreContext } from "../../store";
 import { useAlert } from "../../components/alert/AlertProvider";
-import { addAuthUserLocalStorage } from "../../helpers/localStorage";
 
 const styles = {
   containerStyles: {
@@ -49,6 +48,13 @@ const UserRegistration = () => {
     isChecked: false,
     errors: [],
   });
+
+  const updateStore = (attributes = {}) => {
+    setStore((prevState) => ({
+      ...prevState,
+      ...attributes,
+    }));
+  };
 
   const handleInputChange = (event) => {
     const { name, value } = event.target;
@@ -157,10 +163,9 @@ const UserRegistration = () => {
     }));
 
     if (!errors.length) {
-      setStore(prevStore => ({
-        ...prevStore,
+      updateStore({
         isLoading: true,
-      }));
+      });
 
       const apiData = {
         gender,
@@ -172,40 +177,36 @@ const UserRegistration = () => {
         phoneNumber: phoneNumber.trim(),
         address: address.trim(),
       };
-      
-      Api.post(apiPaths.signUpUser, apiData).then(res => {
-        console.log('res', res.data);
-        showAlert({
-          severity: 'success',
-          message: 'Registered successully'
+
+      Api.post(apiPaths.user.signUpUser, apiData)
+        .then((res) => {
+          showAlert({
+            severity: "success",
+            message: "Registered successully",
+          });
+
+          updateStore({
+            isLoading: false,
+          });
+
+          navigate("/login");
+        })
+        .catch((err) => {
+          let errMessage = "User registration failed";
+
+          if (err.response && err.response.data && err.response.data.message) {
+            errMessage = err.response.data.message;
+          }
+
+          showAlert({
+            severity: "error",
+            message: errMessage,
+          });
+
+          updateStore({
+            isLoading: false,
+          });
         });
-
-        setStore(prevStore => ({
-          ...prevStore,
-          isLoading: false,
-        }));
-
-        addAuthUserLocalStorage(res.data.id);
-
-        navigate("/login");
-      }).catch((err) => {
-        console.log('err', err);
-        let errMessage = 'User registration failed';
-
-        if (err.response && err.response.data && err.response.data.message) {
-          errMessage = err.response.data.message 
-        }
-        
-        showAlert({
-          severity: 'error',
-          message: errMessage
-        });
-
-        setStore(prevStore => ({
-          ...prevStore,
-          isLoading: false,
-        }));
-      });
     }
   };
 
@@ -360,7 +361,7 @@ const UserRegistration = () => {
                 <Button
                   fullWidth
                   variant="outlined"
-                  disabled={!state.isChecked}
+                  disabled={!state.isChecked || store.isLoading}
                   onClick={handleSubmit}
                 >
                   Register

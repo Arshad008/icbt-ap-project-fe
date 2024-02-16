@@ -1,7 +1,11 @@
 import Axios from 'axios';
 
 export const apiPaths = {
-  signUpUser: '/user'
+  login: '/login',
+  user: {
+    base: '/user',
+    signUpUser: '/user',
+  },
 };
 
 export const Api = Axios.create({
