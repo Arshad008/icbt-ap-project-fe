@@ -1,22 +1,17 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useState } from "react";
 import { NavLink, Navigate, useNavigate } from "react-router-dom";
 import {
   Button,
   Card,
   CardContent,
-  Checkbox,
   FormControl,
-  FormControlLabel,
   Grid,
   Stack,
   TextField,
   Typography,
 } from "@mui/material";
 
-import {
-  addAuthUserDataToLocalStorage,
-  getAuthUserDataFromLocalStorage,
-} from "../../helpers/localStorage";
+import { addAuthUserDataToLocalStorage } from "../../helpers/localStorage";
 import { Api, apiPaths } from "../../api";
 import { StoreContext } from "../../store";
 import { useAlert } from "../../components/alert/AlertProvider";

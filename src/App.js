@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Navigate, Route, Routes } from "react-router-dom";
+import { Route, Routes } from "react-router-dom";
 import { ThemeProvider } from "@mui/material";
 
 import "./App.css";
@@ -23,13 +23,12 @@ const App = () => {
   const [store, setStore] = useState(initialStore);
   console.log("store", store);
 
-  const authUser = store.authUser;
   const localAuthData = getAuthUserDataFromLocalStorage();
   const userPermissions =
     store.authUser && store.authUser.role && store.authUser.role === "User";
 
   useEffect(() => {
-    if (!authUser && localAuthData && localAuthData.id && localAuthData.role) {
+    if (!store.authUser && localAuthData && localAuthData.id && localAuthData.role) {
       const path = `${apiPaths.user.base}/${localAuthData.id}`;
 
       updateStore({
@@ -81,7 +80,6 @@ const App = () => {
                 path="admin/dashboard/collect-sample"
                 element={<StaffCollectSample />}
               />
-              <Route path="*" element={<Navigate to="/" />} />
             </Routes>
           </div>
         </ThemeProvider>
