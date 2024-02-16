@@ -1,32 +1,17 @@
 import React from "react";
 import {
-  Button,
   Card,
-  CardActionArea,
   CardContent,
-  Chip,
   Container,
   Grid,
-  Paper,
-  Stack,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
   Typography,
 } from "@mui/material";
-// Icons
-import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 
-// Components
-import UserAppointmentListItem from "../../components/user/UserAppointmentListItem";
+import UserAppointmentListItem from "../../components/UserAppointmentListItem";
 
 const styles = {
   containerStyles: {
     marginTop: '15px',
-    // padding: "15px",
   },
 };
 

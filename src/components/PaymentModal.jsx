@@ -13,7 +13,6 @@ import {
   Typography,
 } from "@mui/material";
 import { usePaymentInputs } from "react-payment-inputs";
-// Icons
 import CloseIcon from "@mui/icons-material/Close";
 
 import { getFormatedNumberWithCommas } from "../helpers/Strings";
