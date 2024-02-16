@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import {
   Autocomplete,
   Button,
@@ -13,6 +14,7 @@ import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterMoment } from "@mui/x-date-pickers/AdapterMoment";
 import moment from "moment/moment";
 
+import { StoreContext } from "../../store";
 import PaymentModal from "../../components/PaymentModal";
 
 const styles = {
@@ -25,10 +27,25 @@ const styles = {
 };
 
 const Home = () => {
+  const navigate = useNavigate();
+  const { store, setStore } = useContext(StoreContext);
+
   const [isPaymentModalOpen, setPaymentModalOpen] = useState(false);
+
+  const authUser = store.authUser;
 
   const togglePaymentModal = () => {
     setPaymentModalOpen(!isPaymentModalOpen);
+  };
+
+  const onBookNow = () => {
+    if (authUser) {
+      if (authUser.role === "User") {
+        //
+      }
+    } else {
+      navigate("/login");
+    }
   };
 
   return (
@@ -68,11 +85,7 @@ const Home = () => {
                 </FormControl>
               </Grid>
               <Grid item xs={12}>
-                <Button
-                  fullWidth
-                  variant="outlined"
-                  onClick={togglePaymentModal}
-                >
+                <Button fullWidth variant="outlined" onClick={onBookNow}>
                   Book Now
                 </Button>
               </Grid>

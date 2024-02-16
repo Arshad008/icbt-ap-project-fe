@@ -34,7 +34,6 @@ const Login = () => {
   const [state, setState] = useState({
     email: "",
     password: "",
-    role: "User",
   });
 
   const emailValid = isEmailValid(state.email);
@@ -56,11 +55,11 @@ const Login = () => {
   };
 
   const handleSubmit = () => {
-    const redirectUrl = "/profile";
+    let redirectUrl = "/profile";
+
     const apiData = {
       email: state.email.trim(),
       password: state.password,
-      role: state.role,
     };
 
     updateStore({
@@ -70,6 +69,10 @@ const Login = () => {
     Api.post(apiPaths.login, apiData)
       .then((res) => {
         addAuthUserDataToLocalStorage(res.data.id, res.data.role);
+
+        if (res.data.role === "Staff") {
+          redirectUrl = "/admin/dashboard";
+        }
 
         updateStore({
           isLoading: false,
