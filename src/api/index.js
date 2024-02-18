@@ -1,10 +1,13 @@
-import Axios from 'axios';
+import Axios from "axios";
 
 export const apiPaths = {
-  login: '/login',
+  login: "/login",
   user: {
-    base: '/user',
-    signUpUser: '/user',
+    base: "/user",
+  },
+  staff: {
+    base: "/staff",
+    updateStatus: "/staff/updateStatus",
   },
 };
 
@@ -13,5 +16,5 @@ export const Api = Axios.create({
   headers: {
     "Content-Type": "application/json",
     "Access-Control-Allow-Origin": "*",
-  }
+  },
 });

@@ -18,18 +18,31 @@ import UserProfile from "./pages/user/UserProfile";
 import StaffDashboard from "./pages/staff/StaffDashboard";
 import StaffAppointments from "./pages/staff/StaffAppointments";
 import StaffCollectSample from "./pages/staff/StaffCollectSample";
+import StaffManagement from "./pages/staff/StaffManagement";
 
 const App = () => {
   const [store, setStore] = useState(initialStore);
-  console.log("store", store);
+  console.log('store', store);
 
   const localAuthData = getAuthUserDataFromLocalStorage();
   const userPermissions =
     store.authUser && store.authUser.role && store.authUser.role === "User";
 
+  const staffPermissions =
+    store.authUser && store.authUser.role && store.authUser.role === "Staff";
+
   useEffect(() => {
-    if (!store.authUser && localAuthData && localAuthData.id && localAuthData.role) {
-      const path = `${apiPaths.user.base}/${localAuthData.id}`;
+    if (
+      !store.authUser &&
+      localAuthData &&
+      localAuthData.id &&
+      localAuthData.role
+    ) {
+      let path = `${apiPaths.user.base}/${localAuthData.id}`;
+
+      if (localAuthData.role === 'Staff') {
+        path = `${apiPaths.staff.base}/${localAuthData.id}`
+      }
 
       updateStore({
         isLoading: true,
@@ -71,15 +84,23 @@ const App = () => {
                 <Route path="profile" element={<UserProfile />} />
               ) : null}
               {/* ADMIN */}
-              <Route path="admin/dashboard" element={<StaffDashboard />} />
-              <Route
-                path="admin/dashboard/appointments"
-                element={<StaffAppointments />}
-              />
-              <Route
-                path="admin/dashboard/collect-sample"
-                element={<StaffCollectSample />}
-              />
+              {staffPermissions ? (
+                <>
+                  <Route path="admin/dashboard" element={<StaffDashboard />} />
+                  <Route
+                    path="admin/dashboard/staffs"
+                    element={<StaffManagement />}
+                  />
+                  <Route
+                    path="admin/dashboard/appointments"
+                    element={<StaffAppointments />}
+                  />
+                  <Route
+                    path="admin/dashboard/collect-sample"
+                    element={<StaffCollectSample />}
+                  />
+                </>
+              ) : null}
             </Routes>
           </div>
         </ThemeProvider>

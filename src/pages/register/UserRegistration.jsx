@@ -178,7 +178,7 @@ const UserRegistration = () => {
         address: address.trim(),
       };
 
-      Api.post(apiPaths.user.signUpUser, apiData)
+      Api.post(apiPaths.user.base, apiData)
         .then((res) => {
           showAlert({
             severity: "success",

@@ -45,6 +45,15 @@ const StaffDashboard = () => {
             <Grid item xs={6} sm={4} md={3} lg={2}>
               {renderCardItem(
                 <CalendarMonthIcon style={{ fontSize: "32px" }} />,
+                "Manage Staffs",
+                () => {
+                  navigate("/admin/dashboard/staffs");
+                }
+              )}
+            </Grid>
+            <Grid item xs={6} sm={4} md={3} lg={2}>
+              {renderCardItem(
+                <CalendarMonthIcon style={{ fontSize: "32px" }} />,
                 "View Appointments",
                 () => {
                   navigate("/admin/dashboard/appointments");

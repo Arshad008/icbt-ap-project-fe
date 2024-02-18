@@ -50,7 +50,7 @@ const AppHeader = () => {
   const onLogout = () => {
     setStore(initialStore);
     removeLocalStorageData();
-    navigate("/");
+    navigate("/login");
     handleClose();
   };
 
