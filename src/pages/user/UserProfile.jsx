@@ -12,7 +12,7 @@ import {
 import AddIcon from "@mui/icons-material/Add";
 
 import { StoreContext } from "../../store";
-import UserAppointmentListItem from "../../components/UserAppointmentListItem";
+import UserAppointmentListItem from "../../components/user/UserAppointmentListItem";
 
 const styles = {
   containerStyles: {

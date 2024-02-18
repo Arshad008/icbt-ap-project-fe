@@ -1,5 +1,5 @@
 import React, { useContext, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Navigate, useNavigate } from "react-router-dom";
 import {
   Autocomplete,
   Button,
@@ -15,7 +15,7 @@ import { AdapterMoment } from "@mui/x-date-pickers/AdapterMoment";
 import moment from "moment/moment";
 
 import { StoreContext } from "../../store";
-import PaymentModal from "../../components/PaymentModal";
+import PaymentModal from "../../components/user/PaymentModal";
 
 const styles = {
   containerStyles: {
@@ -47,6 +47,10 @@ const Home = () => {
       navigate("/login");
     }
   };
+
+  if (store.authUser && store.authUser.role === "Staff") {
+    return <Navigate to="/admin/dashboard" />;
+  }
 
   return (
     <div style={styles.containerStyles}>

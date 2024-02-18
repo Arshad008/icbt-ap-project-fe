@@ -12,8 +12,8 @@ import {
 } from "@mui/material";
 import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterMoment } from "@mui/x-date-pickers/AdapterMoment";
-import moment from "moment";
 import CloseIcon from "@mui/icons-material/Close";
+import moment from "moment";
 
 const StaffAppointmentConfirmationModal = ({ open, onClose }) => {
   return (

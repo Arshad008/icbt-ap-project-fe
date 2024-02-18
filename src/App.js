@@ -19,10 +19,10 @@ import StaffDashboard from "./pages/staff/StaffDashboard";
 import StaffAppointments from "./pages/staff/StaffAppointments";
 import StaffCollectSample from "./pages/staff/StaffCollectSample";
 import StaffManagement from "./pages/staff/StaffManagement";
+import TestManagement from "./pages/staff/TestManagement";
 
 const App = () => {
   const [store, setStore] = useState(initialStore);
-  console.log('store', store);
 
   const localAuthData = getAuthUserDataFromLocalStorage();
   const userPermissions =
@@ -40,8 +40,8 @@ const App = () => {
     ) {
       let path = `${apiPaths.user.base}/${localAuthData.id}`;
 
-      if (localAuthData.role === 'Staff') {
-        path = `${apiPaths.staff.base}/${localAuthData.id}`
+      if (localAuthData.role === "Staff") {
+        path = `${apiPaths.staff.base}/${localAuthData.id}`;
       }
 
       updateStore({
@@ -90,6 +90,10 @@ const App = () => {
                   <Route
                     path="admin/dashboard/staffs"
                     element={<StaffManagement />}
+                  />
+                  <Route
+                    path="admin/dashboard/tests"
+                    element={<TestManagement />}
                   />
                   <Route
                     path="admin/dashboard/appointments"

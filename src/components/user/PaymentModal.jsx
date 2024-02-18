@@ -15,7 +15,7 @@ import {
 import { usePaymentInputs } from "react-payment-inputs";
 import CloseIcon from "@mui/icons-material/Close";
 
-import { getFormatedNumberWithCommas } from "../helpers/Strings";
+import { getFormatedNumberWithCommas } from "../../helpers/Strings";
 
 const PaymentModal = ({ open, onClose }) => {
   const { meta, getCardNumberProps, getExpiryDateProps, getCVCProps } =

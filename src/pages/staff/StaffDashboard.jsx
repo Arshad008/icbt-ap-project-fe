@@ -10,6 +10,8 @@ import {
   Typography,
 } from "@mui/material";
 
+import GroupIcon from "@mui/icons-material/Group";
+import ScienceIcon from "@mui/icons-material/Science";
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 import VaccinesIcon from "@mui/icons-material/Vaccines";
 
@@ -44,10 +46,19 @@ const StaffDashboard = () => {
             </Grid>
             <Grid item xs={6} sm={4} md={3} lg={2}>
               {renderCardItem(
-                <CalendarMonthIcon style={{ fontSize: "32px" }} />,
+                <GroupIcon style={{ fontSize: "32px" }} />,
                 "Manage Staffs",
                 () => {
                   navigate("/admin/dashboard/staffs");
+                }
+              )}
+            </Grid>
+            <Grid item xs={6} sm={4} md={3} lg={2}>
+              {renderCardItem(
+                <ScienceIcon style={{ fontSize: "32px" }} />,
+                "Manage Tests",
+                () => {
+                  navigate("/admin/dashboard/tests");
                 }
               )}
             </Grid>

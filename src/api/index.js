@@ -9,6 +9,9 @@ export const apiPaths = {
     base: "/staff",
     updateStatus: "/staff/updateStatus",
   },
+  test: {
+    base: '/test'
+  },
 };
 
 export const Api = Axios.create({

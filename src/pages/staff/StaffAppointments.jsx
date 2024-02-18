@@ -13,7 +13,7 @@ import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterMoment } from "@mui/x-date-pickers/AdapterMoment";
 import moment from "moment";
 
-import StaffAppointmentConfirmationModal from "../../components/StaffAppointmentConfirmationModal";
+import StaffAppointmentConfirmationModal from "../../components/staff/StaffAppointmentConfirmationModal";
 
 const StaffAppointments = () => {
   const [state, setState] = useState({

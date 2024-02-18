@@ -2,7 +2,6 @@ import React, { useContext, useEffect, useState } from "react";
 import {
   Button,
   Card,
-  CardActionArea,
   CardContent,
   Chip,
   Container,
@@ -22,10 +21,12 @@ import { useConfirm } from "material-ui-confirm";
 
 import { Api, apiPaths } from "../../api";
 import { StoreContext } from "../../store";
+import { useAlert } from "../../components/alert/AlertProvider";
 import AddStaffModal from "../../components/AddStaffModal";
 
 const StaffManagement = () => {
   const confirm = useConfirm();
+  const showAlert = useAlert();
   const { store, setStore } = useContext(StoreContext);
 
   const [isAddStaffModalOpen, setAddStaffModalOpen] = useState(false);
@@ -42,7 +43,7 @@ const StaffManagement = () => {
     }));
   };
 
-  const toggleAddStaffModalOpen = () => {
+  const toggleAddStaffModal = () => {
     setAddStaffModalOpen(!isAddStaffModalOpen);
   };
 
@@ -60,12 +61,23 @@ const StaffManagement = () => {
         getStaffList();
       })
       .catch((err) => {
+        if (err.response && err.response.data && err.response.data.message) {
+          showAlert({
+            severity: "error",
+            message: err.response.data.message,
+          });
+        } else {
+          showAlert({
+            severity: "error",
+            message: "Staff registration failed",
+          });
+        }
         updateStore({
           isLoading: false,
         });
       });
 
-    toggleAddStaffModalOpen();
+    toggleAddStaffModal();
   };
 
   const getStaffList = () => {
@@ -139,9 +151,9 @@ const StaffManagement = () => {
                   <Button
                     variant="contained"
                     startIcon={<AddIcon />}
-                    onClick={toggleAddStaffModalOpen}
+                    onClick={toggleAddStaffModal}
                   >
-                    Add Staff
+                    Add New Staff
                   </Button>
                 </Stack>
               </Grid>
@@ -161,7 +173,7 @@ const StaffManagement = () => {
                       Registered At
                     </TableCell>
                     <TableCell style={{ fontWeight: 600 }}>Status</TableCell>
-                    <TableCell style={{ fontWeight: 600 }}>Action</TableCell>
+                    <TableCell style={{ fontWeight: 600 }}>Actions</TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
@@ -194,9 +206,9 @@ const StaffManagement = () => {
                               color="error"
                               size="small"
                               disabled={isActionDisabled}
-                              onClick={() => toggleStatus(item, "Blocked")}
+                              onClick={() => toggleStatus(item, "Disabled")}
                             >
-                              Deactivate
+                              Disable
                             </Button>
                           ) : (
                             <Button
@@ -222,7 +234,7 @@ const StaffManagement = () => {
       {isAddStaffModalOpen ? (
         <AddStaffModal
           open={isAddStaffModalOpen}
-          onClose={toggleAddStaffModalOpen}
+          onClose={toggleAddStaffModal}
           onSubmit={onRegisterStaff}
         />
       ) : null}
