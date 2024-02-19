@@ -16,11 +16,6 @@ import { useConfirm } from "material-ui-confirm";
 import CloseIcon from "@mui/icons-material/Close";
 import DeleteIcon from "@mui/icons-material/Delete";
 
-const defaultTestData = {
-  label: "",
-  value: "",
-};
-
 const AddTestModal = ({ open, onClose, onSubmit }) => {
   const confirm = useConfirm();
 
@@ -28,7 +23,7 @@ const AddTestModal = ({ open, onClose, onSubmit }) => {
     name: "",
     description: "",
     price: "",
-    testData: [{ ...defaultTestData }],
+    testLabels: [""],
     errors: [],
   });
 
@@ -42,42 +37,29 @@ const AddTestModal = ({ open, onClose, onSubmit }) => {
   };
 
   const onAddField = () => {
-    const newTestData = [...state.testData];
-    newTestData.push({ ...defaultTestData });
+    const newTestLabels = [...state.testLabels];
+    newTestLabels.push("");
 
     setState((prevState) => ({
       ...prevState,
-      testData: newTestData,
+      testLabels: newTestLabels,
     }));
   };
 
   const handleLabelChange = (event, index) => {
     const { value } = event.target;
 
-    const newTestData = [...state.testData];
+    const newTestLabels = [...state.testLabels];
 
-    newTestData[index].label = value;
-
-    setState((prevState) => ({
-      ...prevState,
-      testData: newTestData,
-    }));
-  };
-
-  const handleValueChange = (event, index) => {
-    const { value } = event.target;
-
-    const newTestData = [...state.testData];
-
-    newTestData[index].value = value;
+    newTestLabels[index] = value;
 
     setState((prevState) => ({
       ...prevState,
-      testData: newTestData,
+      testLabels: newTestLabels,
     }));
   };
 
-  const handleDeleteTestData = async (itmeIndex) => {
+  const handleDeleteTestLabel = async (itmeIndex) => {
     const confirmed = await confirm({
       description: "Do you want to delete this test data?",
     })
@@ -85,24 +67,22 @@ const AddTestModal = ({ open, onClose, onSubmit }) => {
       .catch(() => false);
 
     if (confirmed) {
-      const newTestData = [...state.testData].filter((item, index) => {
+      const newTestLabels = [...state.testLabels].filter((item, index) => {
         return index !== itmeIndex;
       });
 
       setState((prevState) => ({
         ...prevState,
-        testData: newTestData,
+        testLabels: newTestLabels,
       }));
     }
   };
 
   const handleSubmit = () => {
-    const { name, description, price, testData } = state;
+    const { name, description, price, testLabels } = state;
 
     const errors = [];
-    const newTestData = testData.filter(
-      (item) => item.label.trim() && item.value.trim()
-    );
+    const newTestLabels = testLabels.filter((item) => item.trim());
 
     if (!name.trim().length) {
       errors.push("Test name is required");
@@ -116,8 +96,8 @@ const AddTestModal = ({ open, onClose, onSubmit }) => {
       errors.push("Price is required");
     }
 
-    if (!newTestData.length) {
-      errors.push("Test data is required");
+    if (!newTestLabels.length) {
+      errors.push("Test label is required");
     }
 
     setState((prevState) => ({
@@ -130,7 +110,7 @@ const AddTestModal = ({ open, onClose, onSubmit }) => {
         name,
         description,
         price,
-        testData: newTestData,
+        testLabels: newTestLabels,
       };
 
       onSubmit(apiData);
@@ -218,22 +198,20 @@ const AddTestModal = ({ open, onClose, onSubmit }) => {
               </FormControl>
             </Grid>
             <Grid item xs={12}>
-              <Typography variant="h6">Test Data</Typography>
+              <Typography variant="h6">Test Labels</Typography>
             </Grid>
-            {state.testData && state.testData.length
-              ? state.testData.map((item, index) => {
-                  const selectedItem = state.testData[index];
-
-                  const { label, value } = selectedItem;
+            {state.testLabels && state.testLabels.length
+              ? state.testLabels.map((item, index) => {
+                  const selectedValue = state.testLabels[index];
 
                   return (
                     <React.Fragment key={index}>
-                      <Grid item xs={5}>
+                      <Grid item xs={10}>
                         <FormControl fullWidth>
                           <TextField
                             size="small"
-                            value={label}
-                            label="Title"
+                            value={selectedValue}
+                            label="Label"
                             placeholder="Enter here"
                             InputLabelProps={{ shrink: true }}
                             onChange={(event) =>
@@ -242,24 +220,10 @@ const AddTestModal = ({ open, onClose, onSubmit }) => {
                           />
                         </FormControl>
                       </Grid>
-                      <Grid item xs={5}>
-                        <FormControl fullWidth>
-                          <TextField
-                            size="small"
-                            value={value}
-                            label="Value"
-                            placeholder="Enter here"
-                            InputLabelProps={{ shrink: true }}
-                            onChange={(event) =>
-                              handleValueChange(event, index)
-                            }
-                          />
-                        </FormControl>
-                      </Grid>
                       <Grid item xs={2}>
                         <IconButton
                           color="error"
-                          onClick={() => handleDeleteTestData(index)}
+                          onClick={() => handleDeleteTestLabel(index)}
                         >
                           <DeleteIcon />
                         </IconButton>

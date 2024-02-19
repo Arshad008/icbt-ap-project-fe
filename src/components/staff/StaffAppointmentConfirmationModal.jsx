@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   Button,
   Dialog,
@@ -10,12 +10,21 @@ import {
   IconButton,
   TextField,
 } from "@mui/material";
-import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
+import { DateTimePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterMoment } from "@mui/x-date-pickers/AdapterMoment";
 import CloseIcon from "@mui/icons-material/Close";
 import moment from "moment";
 
-const StaffAppointmentConfirmationModal = ({ open, onClose }) => {
+import { getFormatedAppointmentNumber } from "../../helpers/Strings";
+
+const StaffAppointmentConfirmationModal = ({
+  open,
+  onClose,
+  appointmentData,
+  onConfirm,
+}) => {
+  const [date, setDate] = useState(moment());
+
   return (
     <Dialog open={open} onClose={onClose}>
       <DialogTitle>Appointment Confirmation</DialogTitle>
@@ -35,19 +44,25 @@ const StaffAppointmentConfirmationModal = ({ open, onClose }) => {
           <Grid item xs={12}>
             <FormControl fullWidth>
               <TextField
-                placeholder="07/06/06/2024"
+                placeholder={getFormatedAppointmentNumber(100)}
                 label="Appointment Number"
                 InputLabelProps={{ shrink: true }}
+                defaultValue={getFormatedAppointmentNumber(
+                  appointmentData.number
+                )}
+                InputProps={{ readOnly: true }}
               />
             </FormControl>
           </Grid>
           <Grid item xs={12}>
             <FormControl fullWidth>
               <LocalizationProvider dateAdapter={AdapterMoment}>
-                <DatePicker
-                  defaultValue={moment()}
-                  format="YYYY / MMMM / DD / hh:mm A"
+                <DateTimePicker
+                  value={date}
+                  format="YYYY / MMMM / DD / ddd / hh:mm A"
                   label="Date & Time *"
+                  minDate={moment()}
+                  onChange={(value) => setDate(value)}
                 />
               </LocalizationProvider>
             </FormControl>
@@ -55,7 +70,11 @@ const StaffAppointmentConfirmationModal = ({ open, onClose }) => {
         </Grid>
       </DialogContent>
       <DialogActions style={{ padding: "30px" }}>
-        <Button variant="contained" color="success">
+        <Button
+          variant="contained"
+          color="success"
+          onClick={() => onConfirm(appointmentData, date)}
+        >
           Confirm
         </Button>
       </DialogActions>

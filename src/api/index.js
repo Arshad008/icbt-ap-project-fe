@@ -10,7 +10,12 @@ export const apiPaths = {
     updateStatus: "/staff/updateStatus",
   },
   test: {
-    base: '/test'
+    base: "/test",
+  },
+  appointment: {
+    base: "/appointment",
+    adminList: "/appointment/admin/list",
+    adminConfirm: "/appointment/admin/bookAppointment",
   },
 };
 

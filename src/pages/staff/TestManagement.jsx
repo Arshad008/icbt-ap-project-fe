@@ -263,29 +263,22 @@ const TestManagement = () => {
                 </div>
               </Grid>
               <Grid item xs={12}>
-                <Typography fontWeight={600}>Test Data</Typography>
+                <Typography fontWeight={600}>Test Labels</Typography>
               </Grid>
-              {selectedTestData.testData && selectedTestData.testData.length
-                ? selectedTestData.testData.map((item, index) => {
-                    return (
-                      <Grid item xs={12} key={index}>
-                        <div>
-                          <Typography variant="subtitle2">
-                            {item.label}
+              <Grid item xs={12}>
+                <Typography component="ul">
+                  {selectedTestData.testLabels &&
+                  selectedTestData.testLabels.length
+                    ? selectedTestData.testLabels.map((item, index) => {
+                        return (
+                          <Typography key={index} component="li">
+                            {item}
                           </Typography>
-                        </div>
-                        <div>
-                          <Typography variant="subtitle2">
-                            {item.value}
-                          </Typography>
-                        </div>
-                        {selectedTestData.testData.length - 1 !== index ? (
-                          <Divider />
-                        ) : null}
-                      </Grid>
-                    );
-                  })
-                : null}
+                        );
+                      })
+                    : null}
+                </Typography>
+              </Grid>
             </Grid>
           </DialogContent>
         </Dialog>

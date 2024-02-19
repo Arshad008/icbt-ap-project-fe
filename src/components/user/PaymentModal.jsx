@@ -17,7 +17,7 @@ import CloseIcon from "@mui/icons-material/Close";
 
 import { getFormatedNumberWithCommas } from "../../helpers/Strings";
 
-const PaymentModal = ({ open, onClose }) => {
+const PaymentModal = ({ open, onClose, testData, onPaymentSuccess }) => {
   const { meta, getCardNumberProps, getExpiryDateProps, getCVCProps } =
     usePaymentInputs();
 
@@ -74,22 +74,32 @@ const PaymentModal = ({ open, onClose }) => {
         <div>
           <Grid container spacing={2}>
             <Grid item xs={12}>
-              <Stack>
+              <Stack style={{ marginBottom: "15px" }}>
                 <Typography variant="subtitle2" fontWeight={600}>
                   Test Name
                 </Typography>
-                <Typography variant="subtitle2">Test name</Typography>
+                <Typography variant="subtitle2">{testData.name}</Typography>
+              </Stack>
+              <Stack>
+                <Typography variant="subtitle2" fontWeight={600}>
+                  Test Description
+                </Typography>
+                <Typography variant="subtitle2">
+                  {testData.description}
+                </Typography>
               </Stack>
             </Grid>
             <Grid item xs={12}>
               <Typography variant="h6">
-                {getFormatedNumberWithCommas(2500)} LKR
+                {getFormatedNumberWithCommas(testData.price)} LKR
               </Typography>
             </Grid>
             <Grid item xs={12}>
-              <Typography variant="subtitle2">
-                Please complete the payment in order to book an Appointment.
-              </Typography>
+              <div style={{ marginBottom: "15px" }}>
+                <Typography>
+                  Please complete the payment in order to book an Appointment.
+                </Typography>
+              </div>
             </Grid>
             <Grid item xs={12}>
               <FormControl fullWidth>
@@ -144,6 +154,7 @@ const PaymentModal = ({ open, onClose }) => {
           disabled={state.isCardInvalid || !meta.isTouched}
           variant="contained"
           color="success"
+          onClick={() => onPaymentSuccess()}
         >
           Pay
         </Button>
