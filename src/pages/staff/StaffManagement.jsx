@@ -22,7 +22,7 @@ import { useConfirm } from "material-ui-confirm";
 import { Api, apiPaths } from "../../api";
 import { StoreContext } from "../../store";
 import { useAlert } from "../../components/alert/AlertProvider";
-import AddStaffModal from "../../components/AddStaffModal";
+import AddStaffModal from "../../components/staff/AddStaffModal";
 
 const StaffManagement = () => {
   const confirm = useConfirm();
@@ -173,6 +173,7 @@ const StaffManagement = () => {
                       Registered At
                     </TableCell>
                     <TableCell style={{ fontWeight: 600 }}>Status</TableCell>
+                    <TableCell style={{ fontWeight: 600 }}>Role</TableCell>
                     <TableCell style={{ fontWeight: 600 }}>Actions</TableCell>
                   </TableRow>
                 </TableHead>
@@ -193,11 +194,15 @@ const StaffManagement = () => {
                         <TableCell scope="row">{item.createdAt}</TableCell>
                         <TableCell scope="row">
                           <Chip
+                            size="small"
                             color={
                               item.status === "Active" ? "success" : "error"
                             }
                             label={item.status}
                           />
+                        </TableCell>
+                        <TableCell scope="row">
+                          <Chip size="small" label={item.subRole} />
                         </TableCell>
                         <TableCell scope="row">
                           {item.status === "Active" ? (

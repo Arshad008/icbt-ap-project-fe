@@ -65,7 +65,7 @@ const AppHeader = () => {
             aria-expanded={open ? "true" : undefined}
             onClick={handleClick}
           >
-            <AccountCircleIcon sx={{ color: "#ffffff" }} />
+            <AccountCircleIcon sx={{ color: "#ffffff", fontSize: "32px" }} />
           </IconButton>
           <Menu
             id="menu-user-header"

@@ -62,11 +62,13 @@ const UserProfile = () => {
   };
 
   const getAppointmentsForUser = () => {
+    const apiData = { userId: authUser.id };
+
     updateStore({
       isLoading: true,
     });
 
-    Api.get(`${apiPaths.appointment.base}/${authUser.id}`)
+    Api.post(apiPaths.appointment.userList, apiData)
       .then((res) => {
         if (res.data && res.data.length) {
           setAppointments(res.data);

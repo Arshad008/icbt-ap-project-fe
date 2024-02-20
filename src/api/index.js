@@ -14,8 +14,11 @@ export const apiPaths = {
   },
   appointment: {
     base: "/appointment",
+    userList: "/appointment/user/list",
     adminList: "/appointment/admin/list",
     adminConfirm: "/appointment/admin/bookAppointment",
+    adminUpdateDoctor: "/appointment/admin/updateDoctor",
+    adminUpdateStatus: "/appointment/admin/updateStatus",
   },
 };
 

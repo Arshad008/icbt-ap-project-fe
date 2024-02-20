@@ -100,7 +100,7 @@ const App = () => {
                     element={<StaffAppointments />}
                   />
                   <Route
-                    path="admin/dashboard/collect-sample"
+                    path="admin/dashboard/appointments/view"
                     element={<StaffCollectSample />}
                   />
                 </>

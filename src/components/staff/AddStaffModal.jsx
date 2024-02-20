@@ -15,8 +15,8 @@ import {
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 
-import { isEmailValid } from "../helpers/Strings";
-import { Api } from "../api";
+import { isEmailValid } from "../../helpers/Strings";
+import { Api } from "../../api";
 
 const AddStaffModal = ({ open, onClose, onSubmit }) => {
   const [state, setState] = useState({
@@ -193,6 +193,8 @@ const AddStaffModal = ({ open, onClose, onSubmit }) => {
                   onChange={handleInputChange}
                 >
                   <MenuItem value="Receptionist">Receptionist</MenuItem>
+                  <MenuItem value="Lab Assistant">Lab Assistant</MenuItem>
+                  <MenuItem value="Lab Technician">Lab Technician</MenuItem>
                   <MenuItem value="Admin">Admin</MenuItem>
                 </TextField>
               </FormControl>

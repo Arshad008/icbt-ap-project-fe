@@ -1,4 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import {
   Button,
   Card,
@@ -28,6 +29,7 @@ import { useAlert } from "../../components/alert/AlertProvider";
 import StaffAppointmentConfirmationModal from "../../components/staff/StaffAppointmentConfirmationModal";
 
 const StaffAppointments = () => {
+  const navigate = useNavigate();
   const showAlert = useAlert();
   const { store, setStore } = useContext(StoreContext);
 
@@ -37,6 +39,8 @@ const StaffAppointments = () => {
     appointments: [],
     date: moment(),
   });
+
+  const authUser = store.authUser;
 
   useEffect(() => {
     getAppointmentsForAdmin();
@@ -254,16 +258,36 @@ const StaffAppointments = () => {
                           )}
                         </TableCell>
                         <TableCell scope="row">
-                          <Button
-                            size="small"
-                            variant="outlined"
-                            disabled={isDisabled}
-                            onClick={() =>
-                              openAppointmentConfirmationModal(item)
-                            }
-                          >
-                            Confirm
-                          </Button>
+                          <Stack>
+                            {authUser &&
+                            ["Receptionist", "Admin"].includes(
+                              authUser.subRole
+                            ) ? (
+                              <Button
+                                size="small"
+                                variant="outlined"
+                                disabled={isDisabled}
+                                style={{ marginBottom: "10px" }}
+                                onClick={() =>
+                                  openAppointmentConfirmationModal(item)
+                                }
+                              >
+                                Confirm
+                              </Button>
+                            ) : null}
+                            <Button
+                              size="small"
+                              variant="outlined"
+                              color="inherit"
+                              onClick={() =>
+                                navigate(
+                                  `/admin/dashboard/appointments/view?number=${item.number}`
+                                )
+                              }
+                            >
+                              View Full Details
+                            </Button>
+                          </Stack>
                         </TableCell>
                       </TableRow>
                     );
