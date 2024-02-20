@@ -21,7 +21,7 @@ import { Api, apiPaths } from "../../api";
 import { useAlert } from "../../components/alert/AlertProvider";
 import { getFormatedAppointmentNumber } from "../../helpers/Strings";
 
-const StaffCollectSample = () => {
+const ViewAppointment = () => {
   const showAlert = useAlert();
   const confirm = useConfirm();
   const [searchParams, setSearchParams] = useSearchParams();
@@ -466,4 +466,4 @@ const StaffCollectSample = () => {
   );
 };
 
-export default StaffCollectSample;
+export default ViewAppointment;

@@ -17,7 +17,7 @@ import UserRegistration from "./pages/register/UserRegistration";
 import UserProfile from "./pages/user/UserProfile";
 import StaffDashboard from "./pages/staff/StaffDashboard";
 import StaffAppointments from "./pages/staff/StaffAppointments";
-import StaffCollectSample from "./pages/staff/StaffCollectSample";
+import StaffCollectSample from "./pages/staff/ViewAppointment";
 import StaffManagement from "./pages/staff/StaffManagement";
 import TestManagement from "./pages/staff/TestManagement";
 
