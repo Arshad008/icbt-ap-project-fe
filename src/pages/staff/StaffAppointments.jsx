@@ -211,7 +211,7 @@ const StaffAppointments = () => {
                       testName = item.test.name;
                     }
 
-                    if (item.status === "Confirmed") {
+                    if (item.status !== "Pending") {
                       chipColor = "success";
                     }
 

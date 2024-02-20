@@ -138,7 +138,7 @@ const UserProfile = () => {
                   {appointments.map((item, index) => {
                     let chipColor = "warning";
 
-                    if (item.status === "Confirmed") {
+                    if (item.status !== "Pending") {
                       chipColor = "success";
                     }
 
