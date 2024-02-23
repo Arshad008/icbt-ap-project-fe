@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import {
   Button,
   Dialog,
@@ -9,14 +9,12 @@ import {
   Grid,
   IconButton,
   MenuItem,
-  Stack,
   TextField,
   Typography,
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 
 import { isEmailValid } from "../../helpers/Strings";
-import { Api } from "../../api";
 
 const AddStaffModal = ({ open, onClose, onSubmit }) => {
   const [state, setState] = useState({

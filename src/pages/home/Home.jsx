@@ -11,7 +11,6 @@ import {
   ImageListItem,
   Stack,
   Step,
-  StepIcon,
   StepLabel,
   Stepper,
   TextField,

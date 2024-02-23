@@ -3,13 +3,10 @@ import {
   Button,
   Card,
   CardContent,
-  Chip,
   Container,
   Dialog,
-  DialogActions,
   DialogContent,
   DialogTitle,
-  Divider,
   Grid,
   IconButton,
   Paper,
@@ -67,7 +64,7 @@ const TestManagement = () => {
           isLoading: false,
         });
       })
-      .catch((err) => {
+      .catch(() => {
         updateStore({
           isLoading: false,
         });
@@ -131,7 +128,7 @@ const TestManagement = () => {
     setViewTestModalOpen(true);
   };
 
-  const closeViewTestDataModal = (testData) => {
+  const closeViewTestDataModal = () => {
     setSelectedTestData(undefined);
     setViewTestModalOpen(false);
   };
