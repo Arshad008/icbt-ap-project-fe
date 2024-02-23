@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import {
   Button,
   Dialog,
@@ -16,8 +16,10 @@ import { usePaymentInputs } from "react-payment-inputs";
 import CloseIcon from "@mui/icons-material/Close";
 
 import { getFormatedNumberWithCommas } from "../../helpers/Strings";
+import { StoreContext } from "../../store";
 
 const PaymentModal = ({ open, onClose, testData, onPaymentSuccess }) => {
+  const { store, setStore } = useContext(StoreContext);
   const { meta, getCardNumberProps, getExpiryDateProps, getCVCProps } =
     usePaymentInputs();
 
@@ -151,10 +153,10 @@ const PaymentModal = ({ open, onClose, testData, onPaymentSuccess }) => {
       </DialogContent>
       <DialogActions style={{ padding: "30px" }}>
         <Button
-          disabled={state.isCardInvalid || !meta.isTouched}
           variant="contained"
           color="success"
           onClick={() => onPaymentSuccess()}
+          disabled={state.isCardInvalid || !meta.isTouched || store.isLoading}
         >
           Pay
         </Button>
