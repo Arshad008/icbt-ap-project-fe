@@ -31,7 +31,9 @@ const ViewAppointment = () => {
     appointmentNumber: "",
     appointment: undefined,
     doctorName: "",
+    testData: [],
   });
+  console.log("state", state);
 
   const authUser = store.authUser;
   const urlAppointmentNumber = searchParams.get("number") || "";
@@ -103,15 +105,6 @@ const ViewAppointment = () => {
     }
   }, []);
 
-  useEffect(() => {
-    if (state.appointment && state.appointment.doctorName) {
-      setState((prevState) => ({
-        ...prevState,
-        doctorName: state.appointment.doctorName,
-      }));
-    }
-  }, [state.appointment]);
-
   const updateStore = (attributes = {}) => {
     setStore((prevState) => ({
       ...prevState,
@@ -182,10 +175,34 @@ const ViewAppointment = () => {
       Api.get(`${apiPaths.appointment.base}/${aptNumber}`)
         .then((res) => {
           if (res.data) {
-            setState((prevState) => ({
-              ...prevState,
-              appointment: res.data,
-            }));
+            setState((prevState) => {
+              let _doctorName = "";
+              let _testData = [];
+
+              if (res.data.test && res.data.test.testLabels.length) {
+                res.data.test.testLabels.forEach((item) => {
+                  _testData.push({
+                    label: item,
+                    value: "",
+                  });
+                });
+              }
+
+              if (res.data.doctorName) {
+                _doctorName = res.data.doctorName;
+              }
+
+              if (res.data.testData) {
+                _testData = res.data.testData;
+              }
+
+              return {
+                ...prevState,
+                appointment: res.data,
+                doctorName: _doctorName,
+                testData: _testData,
+              };
+            });
           } else {
             showAlert({
               severity: "error",
@@ -246,6 +263,68 @@ const ViewAppointment = () => {
           });
         })
         .catch(() => {
+          updateStore({
+            isLoading: false,
+          });
+        });
+    }
+  };
+
+  const handleTestDataValueChange = (event, itemIndex) => {
+    const { value } = event.target;
+
+    const newTestData = [...(state.testData || [])];
+    newTestData[itemIndex].value = value;
+
+    setState((prevState) => ({
+      ...prevState,
+      testData: newTestData,
+    }));
+  };
+
+  const handleConfirmResult = async () => {
+    const { appointment, testData } = state;
+
+    const confirmed = await confirm({
+      description: "Do you want to confirm the result?",
+    })
+      .then(() => true)
+      .catch(() => false);
+
+    if (confirmed && appointment) {
+      updateStore({
+        isLoading: true,
+      });
+
+      const apiData = {
+        id: appointment.id,
+        testData,
+      };
+
+      Api.put(apiPaths.appointment.adminUpdateTestData, apiData)
+        .then((res) => {
+          if (res.data) {
+            setState((prevState) => ({
+              ...prevState,
+              appointment: res.data,
+            }));
+          }
+
+          showAlert({
+            severity: "success",
+            message: "Test result updated",
+          });
+
+          updateStore({
+            isLoading: false,
+          });
+        })
+        .catch(() => {
+          showAlert({
+            severity: "error",
+            message: "Update test result failed",
+          });
+
           updateStore({
             isLoading: false,
           });
@@ -453,7 +532,53 @@ const ViewAppointment = () => {
                 <CardContent>
                   <Grid container spacing={2}>
                     <Grid item xs={12}>
-                      hi
+                      <Typography variant="h6">Test Data</Typography>
+                    </Grid>
+                    {state.testData && state.testData.length
+                      ? state.testData.map((item, index) => {
+                          return (
+                            <React.Fragment key={index}>
+                              <Grid item xs={12}>
+                                <Typography
+                                  variant="subtitle2"
+                                  fontWeight={600}
+                                >
+                                  {item.label}
+                                </Typography>
+                              </Grid>
+                              <Grid item xs={12}>
+                                <FormControl fullWidth>
+                                  <TextField
+                                    defaultValue={item.value}
+                                    placeholder="Enter here..."
+                                    onChange={(event) =>
+                                      handleTestDataValueChange(event, index)
+                                    }
+                                  />
+                                </FormControl>
+                              </Grid>
+                            </React.Fragment>
+                          );
+                        })
+                      : null}
+                    <Grid item xs={12}>
+                      <Button
+                        variant="contained"
+                        size="small"
+                        color="success"
+                        onClick={handleConfirmResult}
+                        disabled={
+                          !state.testData.length ||
+                          (state.testData.length &&
+                            state.testData.some(
+                              (item) => !item.value.trim().length
+                            ))
+                        }
+                      >
+                        {state.appointment.testData
+                          ? "Update Result"
+                          : "Confirm Result"}
+                      </Button>
                     </Grid>
                   </Grid>
                 </CardContent>

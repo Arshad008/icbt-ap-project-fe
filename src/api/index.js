@@ -19,6 +19,7 @@ export const apiPaths = {
     adminConfirm: "/appointment/admin/bookAppointment",
     adminUpdateDoctor: "/appointment/admin/updateDoctor",
     adminUpdateStatus: "/appointment/admin/updateStatus",
+    adminUpdateTestData: "/appointment/admin/updateTestData",
   },
 };
 
