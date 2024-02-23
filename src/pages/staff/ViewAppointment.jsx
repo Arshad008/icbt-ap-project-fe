@@ -33,7 +33,6 @@ const ViewAppointment = () => {
     doctorName: "",
     testData: [],
   });
-  console.log("state", state);
 
   const authUser = store.authUser;
   const urlAppointmentNumber = searchParams.get("number") || "";

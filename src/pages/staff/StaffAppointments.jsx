@@ -5,6 +5,7 @@ import {
   Card,
   CardContent,
   Chip,
+  Collapse,
   Container,
   FormControl,
   Grid,
@@ -20,6 +21,7 @@ import {
 } from "@mui/material";
 import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterMoment } from "@mui/x-date-pickers/AdapterMoment";
+import { useConfirm } from "material-ui-confirm";
 import moment from "moment";
 
 import { Api, apiPaths } from "../../api";
@@ -31,6 +33,7 @@ import StaffAppointmentConfirmationModal from "../../components/staff/StaffAppoi
 const StaffAppointments = () => {
   const navigate = useNavigate();
   const showAlert = useAlert();
+  const confirm = useConfirm();
   const { store, setStore } = useContext(StoreContext);
 
   const [state, setState] = useState({
@@ -127,6 +130,66 @@ const StaffAppointments = () => {
     closeAppointmentConfirmationModal();
   };
 
+  const onGenerateReport = async () => {
+    const confirmed = await confirm({
+      description: "Do you want to generate report for the day?",
+    })
+      .then(() => true)
+      .catch(() => false);
+
+    if (confirmed && (state.appointments || []).length) {
+      const rows = [
+        [
+          "Booked At",
+          "Requested At",
+          "Appointment Number",
+          "Customer Name",
+          "Test Name",
+          "Status",
+          "Appointment Time",
+        ],
+      ];
+
+      state.appointments.forEach((item) => {
+        const row = [];
+        const appointmentNumber = getFormatedAppointmentNumber(item.number);
+        const createdAt = moment(item.createdAt).format("YYYY-MM-DD hh:mm A");
+        const userName = `${item.user.firstName} ${item.user.lastName}`;
+        const testName = item.test.name;
+        const requestedAt = moment(item.requestedDate).format(
+          "YYYY-MM-DD hh:mm A"
+        );
+
+        const appointmentTime = item.appointmentDate
+          ? moment(item.appointmentDate).format("YYYY-MM-DD hh:mm A")
+          : "-";
+
+        row.push(
+          createdAt,
+          requestedAt,
+          appointmentNumber,
+          userName,
+          testName,
+          item.status,
+          appointmentTime
+        );
+
+        rows.push(row);
+      });
+
+      let csvContent = "data:text/csv;charset=utf-8,";
+
+      rows.forEach(function (rowArray) {
+        let row = rowArray.join(",");
+        csvContent += row + "\r\n";
+      });
+
+      const encodedUri = encodeURI(csvContent);
+
+      window.open(encodedUri);
+    }
+  };
+
   return (
     <Container style={{ marginTop: "15px" }}>
       <Card>
@@ -167,6 +230,24 @@ const StaffAppointments = () => {
               </FormControl>
             </Stack>
           </div>
+          <Collapse
+            in={
+              ["Admin"].includes(authUser.subRole) &&
+              (state.appointments || []).length
+            }
+          >
+            <div style={{ marginBottom: "15px" }}>
+              <Stack direction="row" justifyContent="flex-end">
+                <Button
+                  variant="contained"
+                  color="info"
+                  onClick={onGenerateReport}
+                >
+                  Generate report for the day
+                </Button>
+              </Stack>
+            </div>
+          </Collapse>
           <div>
             <TableContainer component={Paper}>
               <Table aria-label="simple table">
