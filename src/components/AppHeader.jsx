@@ -106,7 +106,7 @@ const AppHeader = () => {
       <AppBar>
         <Toolbar>
           <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-            ABC Labs
+            ABC Laboratories
           </Typography>
           {renderRightButton()}
         </Toolbar>
