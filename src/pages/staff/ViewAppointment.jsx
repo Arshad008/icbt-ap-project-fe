@@ -479,7 +479,9 @@ const ViewAppointment = () => {
                           name="doctorName"
                           value={state.doctorName}
                           label="Doctor Name"
-                          placeholder="Enter here..."
+                          placeholder={
+                            !hasActionPermissions ? "-" : "Enter here..."
+                          }
                           InputLabelProps={{ shrink: true }}
                           onChange={handleInputChange}
                           InputProps={{ readOnly: !hasActionPermissions }}
@@ -525,41 +527,42 @@ const ViewAppointment = () => {
               </Card>
             </div>
           ) : null}
-          {hasActionPermissionsForUpdateTestData ? (
-            <div style={{ marginBottom: "30px" }}>
-              <Card elevation={3}>
-                <CardContent>
-                  <Grid container spacing={2}>
-                    <Grid item xs={12}>
-                      <Typography variant="h6">Test Data</Typography>
-                    </Grid>
-                    {state.testData && state.testData.length
-                      ? state.testData.map((item, index) => {
-                          return (
-                            <React.Fragment key={index}>
-                              <Grid item xs={12}>
-                                <Typography
-                                  variant="subtitle2"
-                                  fontWeight={600}
-                                >
-                                  {item.label}
-                                </Typography>
-                              </Grid>
-                              <Grid item xs={12}>
-                                <FormControl fullWidth>
-                                  <TextField
-                                    defaultValue={item.value}
-                                    placeholder="Enter here..."
-                                    onChange={(event) =>
-                                      handleTestDataValueChange(event, index)
-                                    }
-                                  />
-                                </FormControl>
-                              </Grid>
-                            </React.Fragment>
-                          );
-                        })
-                      : null}
+          <div style={{ marginBottom: "30px" }}>
+            <Card elevation={3}>
+              <CardContent>
+                <Grid container spacing={2}>
+                  <Grid item xs={12}>
+                    <Typography variant="h6">Test Data</Typography>
+                  </Grid>
+                  {state.testData && state.testData.length
+                    ? state.testData.map((item, index) => {
+                        return (
+                          <React.Fragment key={index}>
+                            <Grid item xs={12}>
+                              <Typography variant="subtitle2" fontWeight={600}>
+                                {item.label}
+                              </Typography>
+                            </Grid>
+                            <Grid item xs={12}>
+                              <FormControl fullWidth>
+                                <TextField
+                                  defaultValue={item.value}
+                                  placeholder="Enter here..."
+                                  onChange={(event) =>
+                                    handleTestDataValueChange(event, index)
+                                  }
+                                  InputProps={{
+                                    readOnly:
+                                      !hasActionPermissionsForUpdateTestData,
+                                  }}
+                                />
+                              </FormControl>
+                            </Grid>
+                          </React.Fragment>
+                        );
+                      })
+                    : null}
+                  {hasActionPermissionsForUpdateTestData ? (
                     <Grid item xs={12}>
                       <Button
                         variant="contained"
@@ -579,11 +582,13 @@ const ViewAppointment = () => {
                           : "Confirm Result"}
                       </Button>
                     </Grid>
-                  </Grid>
-                </CardContent>
-              </Card>
-            </div>
-          ) : null}
+                  ) : null}
+                </Grid>
+              </CardContent>
+            </Card>
+          </div>
+          {/* { ? (
+          ) : null} */}
         </div>
       ) : null}
     </Container>

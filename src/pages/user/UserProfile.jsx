@@ -195,6 +195,21 @@ const UserProfile = () => {
               </Table>
             </TableContainer>
           </div>
+          {appointments.length ? null : (
+            <div
+              style={{
+                margin: "30px 0",
+                backgroundColor: "rgba(0,0,0,0.04)",
+                borderRadius: "7px",
+                padding: "30px",
+                textAlign: "center",
+              }}
+            >
+              <Typography fontWeight={600}>
+                No appointments are booked yet.
+              </Typography>
+            </div>
+          )}
         </CardContent>
       </Card>
     </Container>
