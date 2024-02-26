@@ -43,7 +43,7 @@ const ViewAppointment = () => {
   const hasActionPermissionsForUpdateTestData =
     ["Admin", "Lab Technician"].includes(authUser.subRole) &&
     state.appointment &&
-    state.appointment.status === "Sample Collected";
+    state.appointment.status !== "Pending";
 
   let appointmentNumber = "";
   let userName = "";

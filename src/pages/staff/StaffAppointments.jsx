@@ -29,6 +29,7 @@ import { StoreContext } from "../../store";
 import { getFormatedAppointmentNumber } from "../../helpers/Strings";
 import { useAlert } from "../../components/alert/AlertProvider";
 import StaffAppointmentConfirmationModal from "../../components/staff/StaffAppointmentConfirmationModal";
+import ReportGenerateModal from "../../components/staff/ReportGenerateModal";
 
 const StaffAppointments = () => {
   const navigate = useNavigate();
@@ -41,6 +42,7 @@ const StaffAppointments = () => {
     isConfirmationModalOpen: false,
     appointments: [],
     date: moment(),
+    isReportGenerateModalOpen: false,
   });
 
   const authUser = store.authUser;
@@ -130,52 +132,78 @@ const StaffAppointments = () => {
     closeAppointmentConfirmationModal();
   };
 
-  const onGenerateReport = async () => {
-    const confirmed = await confirm({
-      description: "Do you want to generate report for the day?",
-    })
-      .then(() => true)
-      .catch(() => false);
+  const toggleReportGenerateModal = () => {
+    setState((prevState) => ({
+      ...prevState,
+      isReportGenerateModalOpen: !state.isReportGenerateModalOpen,
+    }));
+  };
 
-    if (confirmed && (state.appointments || []).length) {
+  const generateReport = (list) => {
+    if (list && list.length) {
       const rows = [
         [
-          "Booked At",
-          "Requested At",
-          "Appointment Number",
-          "Customer Name",
-          "Test Name",
-          "Status",
-          "Appointment Time",
+          "Total amounts for the appointment",
+          "Most purchased test",
+          "Pending Appointments",
+          "Sample Collected Appointments",
+          "Tests Completed",
         ],
       ];
 
-      state.appointments.forEach((item) => {
-        const row = [];
-        const appointmentNumber = getFormatedAppointmentNumber(item.number);
-        const createdAt = moment(item.createdAt).format("YYYY-MM-DD hh:mm A");
-        const userName = `${item.user.firstName} ${item.user.lastName}`;
-        const testName = item.test.name;
-        const requestedAt = moment(item.requestedDate).format(
-          "YYYY-MM-DD hh:mm A"
-        );
+      let totalAmount = 0;
+      const testOccurence = {};
+      let pending = 0;
+      let pendingAmount = 0;
+      let sampleCollected = 0;
+      let sampleCollectedAmount = 0;
+      let completed = 0;
+      let completedAmount = 0;
 
-        const appointmentTime = item.appointmentDate
-          ? moment(item.appointmentDate).format("YYYY-MM-DD hh:mm A")
-          : "-";
+      list.forEach((item) => {
+        if (item.test && item.test.price) {
+          totalAmount += item.test.price;
 
-        row.push(
-          createdAt,
-          requestedAt,
-          appointmentNumber,
-          userName,
-          testName,
-          item.status,
-          appointmentTime
-        );
+          if (item.test) {
+            testOccurence[item.test.name] =
+              (testOccurence[item.test.name] || 0) + 1;
+          }
+        }
 
-        rows.push(row);
+        if (item.status === "Pending") {
+          pending += 1;
+          pendingAmount += item.test.price;
+        }
+
+        if (item.status === "Sample Collected") {
+          sampleCollected += 1;
+          sampleCollectedAmount += item.test.price;
+        }
+
+        if (item.status === "Completed") {
+          completed += 1;
+          completedAmount += item.test.price;
+        }
       });
+
+      let mostFrequentKey = Object.keys(testOccurence).reduce((a, b) =>
+        testOccurence[a] > testOccurence[b] ? a : b
+      );
+
+      if (testOccurence[mostFrequentKey]) {
+        mostFrequentKey = `${mostFrequentKey} (${testOccurence[mostFrequentKey]}) times`;
+      }
+
+      const row = [];
+      row.push(
+        `LKR ${totalAmount}`,
+        mostFrequentKey,
+        `${pending} (LKR ${pendingAmount})`,
+        `${sampleCollected} (LKR ${sampleCollectedAmount})`,
+        `${completed} (LKR ${completedAmount})`
+      );
+
+      rows.push(row);
 
       let csvContent = "data:text/csv;charset=utf-8,";
 
@@ -188,6 +216,35 @@ const StaffAppointments = () => {
 
       window.open(encodedUri);
     }
+  };
+
+  const getReportData = async (data) => {
+    const apiData = {
+      start: data.startDate,
+      end: data.endDate,
+    };
+
+    updateStore({
+      isLoading: true,
+    });
+
+    Api.post(apiPaths.appointment.adminGetReportData, apiData)
+      .then((res) => {
+        if (res && res.data && res.data.length) {
+          generateReport(res.data);
+        }
+
+        updateStore({
+          isLoading: false,
+        });
+      })
+      .catch(() => {
+        updateStore({
+          isLoading: false,
+        });
+      });
+
+    toggleReportGenerateModal();
   };
 
   return (
@@ -233,7 +290,7 @@ const StaffAppointments = () => {
           <Collapse
             in={
               ["Admin"].includes(authUser.subRole) &&
-              (state.appointments || []).length
+              (state.appointments || []).length > 0
             }
           >
             <div style={{ marginBottom: "15px" }}>
@@ -241,9 +298,9 @@ const StaffAppointments = () => {
                 <Button
                   variant="contained"
                   color="info"
-                  onClick={onGenerateReport}
+                  onClick={toggleReportGenerateModal}
                 >
-                  Generate report for the day
+                  Generate Report
                 </Button>
               </Stack>
             </div>
@@ -386,6 +443,13 @@ const StaffAppointments = () => {
           onClose={closeAppointmentConfirmationModal}
           appointmentData={state.selectedAppointment}
           onConfirm={onConfirmAppointment}
+        />
+      ) : null}
+      {state.isReportGenerateModalOpen ? (
+        <ReportGenerateModal
+          open={state.isReportGenerateModalOpen}
+          onClose={toggleReportGenerateModal}
+          onSubmit={getReportData}
         />
       ) : null}
     </Container>

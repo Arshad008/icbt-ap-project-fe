@@ -20,6 +20,7 @@ export const apiPaths = {
     adminUpdateDoctor: "/appointment/admin/updateDoctor",
     adminUpdateStatus: "/appointment/admin/updateStatus",
     adminUpdateTestData: "/appointment/admin/updateTestData",
+    adminGetReportData: "/appointment/admin/getReportData"
   },
 };
 
