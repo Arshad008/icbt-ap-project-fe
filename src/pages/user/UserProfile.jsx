@@ -7,6 +7,7 @@ import {
   Chip,
   Container,
   Grid,
+  IconButton,
   Paper,
   Stack,
   Table,
@@ -15,10 +16,15 @@ import {
   TableContainer,
   TableHead,
   TableRow,
+  Tooltip,
   Typography,
 } from "@mui/material";
+import { useConfirm } from "material-ui-confirm";
+import ReactDOMServer from "react-dom/server";
 import moment from "moment";
 import AddIcon from "@mui/icons-material/Add";
+import DownloadIcon from "@mui/icons-material/Download";
+import html2pdf from "html3pdf";
 
 import { StoreContext } from "../../store";
 import { Api, apiPaths } from "../../api";
@@ -34,6 +40,7 @@ const appointments = [];
 
 const UserProfile = () => {
   const navigate = useNavigate();
+  const confirm = useConfirm();
 
   const { store, setStore } = useContext(StoreContext);
   const [appointments, setAppointments] = useState([]);
@@ -85,6 +92,85 @@ const UserProfile = () => {
       });
   };
 
+  const renderLabReportView = (appointment) => {
+    const userName = `${appointment.user.firstName} ${appointment.user.lastName}`;
+    const date = moment(appointment.appointmentDate).format(
+      "YYYY-MM-DD hh:mm A"
+    );
+
+    const appointmentNumber = getFormatedAppointmentNumber(appointment.number);
+    const testName = appointment.test.name;
+
+    return (
+      <div style={{ padding: "15px" }}>
+        <Stack style={{ marginBottom: "15px" }}>
+          <h4 style={{ textAlign: "center" }}>ABC LABS - Lab Report</h4>
+        </Stack>
+        <Stack style={{ marginBottom: "15px" }}>
+          <Typography>Name: {userName}</Typography>
+          <Typography>Date: {date}</Typography>
+          <Typography>Appointment Number: {appointmentNumber}</Typography>
+        </Stack>
+        <Stack style={{ marginBottom: "15px" }}>
+          <h4 style={{ textAlign: "center" }}>{testName}</h4>
+        </Stack>
+        <TableContainer component={Paper}>
+          <Table aria-label="simple table">
+            <TableHead>
+              <TableRow>
+                <TableCell style={{ fontWeight: 600 }}>Test Data</TableCell>
+                <TableCell style={{ fontWeight: 600 }}>Test Result</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {appointment.testData.map((item, index) => {
+                return (
+                  <TableRow
+                    key={index}
+                    sx={{
+                      "&:last-child td, &:last-child th": { border: 0 },
+                    }}
+                  >
+                    <TableCell scope="row">{item.label}</TableCell>
+                    <TableCell scope="row">{item.value}</TableCell>
+                  </TableRow>
+                );
+              })}
+            </TableBody>
+          </Table>
+        </TableContainer>
+        <Stack style={{ marginBottom: "15px" }}>
+          <h4 style={{ textAlign: "center" }}>Thank you.</h4>
+        </Stack>
+      </div>
+    );
+  };
+
+  const downloadLabReport = async (appointment) => {
+    const confirmed = await confirm({
+      description: "You want to download?",
+    })
+      .then(() => true)
+      .catch(() => false);
+
+    if (confirmed) {
+      const jsxElement = renderLabReportView(appointment);
+      const htmlString = ReactDOMServer.renderToStaticMarkup(jsxElement);
+      const container = document.createElement("div");
+      container.innerHTML = htmlString;
+
+      const options = {
+        margin: 10,
+        filename: "ABC-Lab-Report.pdf",
+        image: { type: "jpeg", quality: 0.98 },
+        html2canvas: { scale: 2 },
+        jsPDF: { unit: "mm", format: "a4", orientation: "portrait" },
+      };
+
+      html2pdf(container, options);
+    }
+  };
+
   return (
     <Container style={styles.containerStyles}>
       <Card>
@@ -132,6 +218,7 @@ const UserProfile = () => {
                     <TableCell style={{ fontWeight: 600 }}>
                       Appointment Time
                     </TableCell>
+                    <TableCell style={{ fontWeight: 600 }}>Actions</TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
@@ -184,6 +271,19 @@ const UserProfile = () => {
                                 "YYYY-MM-DD hh:mm A"
                               )}
                             </Typography>
+                          ) : (
+                            "-"
+                          )}
+                        </TableCell>
+                        <TableCell>
+                          {item.status === "Completed" ? (
+                            <Tooltip title="Donwload Lab Report">
+                              <IconButton
+                                onClick={() => downloadLabReport(item)}
+                              >
+                                <DownloadIcon />
+                              </IconButton>
+                            </Tooltip>
                           ) : (
                             "-"
                           )}

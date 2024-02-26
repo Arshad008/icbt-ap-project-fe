@@ -403,7 +403,6 @@ const StaffAppointments = () => {
                             ) ? (
                               <Button
                                 size="small"
-                                variant="outlined"
                                 disabled={isDisabled}
                                 style={{ marginBottom: "10px" }}
                                 onClick={() =>
@@ -415,7 +414,6 @@ const StaffAppointments = () => {
                             ) : null}
                             <Button
                               size="small"
-                              variant="outlined"
                               color="inherit"
                               onClick={() =>
                                 navigate(
