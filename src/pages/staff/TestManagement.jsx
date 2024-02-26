@@ -180,7 +180,7 @@ const TestManagement = () => {
                         <TableCell scope="row">{item.name}</TableCell>
                         <TableCell scope="row">{item.description}</TableCell>
                         <TableCell scope="row">
-                          {item.price ? parseFloat(item.price).toFixed(2) : ""}
+                          {item.price ? `LKR ${parseFloat(item.price).toFixed(2)}` : ""}
                         </TableCell>
                         <TableCell scope="row" width={150}>
                           <Stack spacing={2}>
