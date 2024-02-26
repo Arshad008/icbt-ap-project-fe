@@ -93,17 +93,15 @@ const StaffDashboard = () => {
                 )}
               </Grid>
             ) : null}
-            {adminOnlyPermission ? (
-              <Grid item xs={6} sm={4} md={3} lg={2}>
-                {renderCardItem(
-                  <ScienceIcon style={{ fontSize: "32px" }} />,
-                  "Manage Tests",
-                  () => {
-                    navigate("/admin/dashboard/tests");
-                  }
-                )}
-              </Grid>
-            ) : null}
+            <Grid item xs={6} sm={4} md={3} lg={2}>
+              {renderCardItem(
+                <ScienceIcon style={{ fontSize: "32px" }} />,
+                "View Tests",
+                () => {
+                  navigate("/admin/dashboard/tests");
+                }
+              )}
+            </Grid>
             <Grid item xs={6} sm={4} md={3} lg={2}>
               {renderCardItem(
                 <CalendarMonthIcon style={{ fontSize: "32px" }} />,

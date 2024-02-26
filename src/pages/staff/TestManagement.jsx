@@ -36,6 +36,9 @@ const TestManagement = () => {
   const [isViewTestModalOpen, setViewTestModalOpen] = useState(false);
   const [list, setList] = useState([]);
 
+  const authUser = store.authUser;
+  const adminOnlyPermission = authUser && authUser.subRole === "Admin";
+
   useEffect(() => {
     getTestList();
   }, []);
@@ -142,17 +145,19 @@ const TestManagement = () => {
               <Grid item xs={12}>
                 <Typography variant="h5">Test Management</Typography>
               </Grid>
-              <Grid item xs={12}>
-                <Stack alignItems="flex-end">
-                  <Button
-                    variant="contained"
-                    startIcon={<AddIcon />}
-                    onClick={toggleAddTestModal}
-                  >
-                    Add New Test
-                  </Button>
-                </Stack>
-              </Grid>
+              {adminOnlyPermission ? (
+                <Grid item xs={12}>
+                  <Stack alignItems="flex-end">
+                    <Button
+                      variant="contained"
+                      startIcon={<AddIcon />}
+                      onClick={toggleAddTestModal}
+                    >
+                      Add New Test
+                    </Button>
+                  </Stack>
+                </Grid>
+              ) : null}
             </Grid>
           </div>
           <div>
@@ -180,7 +185,9 @@ const TestManagement = () => {
                         <TableCell scope="row">{item.name}</TableCell>
                         <TableCell scope="row">{item.description}</TableCell>
                         <TableCell scope="row">
-                          {item.price ? `LKR ${parseFloat(item.price).toFixed(2)}` : ""}
+                          {item.price
+                            ? `LKR ${parseFloat(item.price).toFixed(2)}`
+                            : ""}
                         </TableCell>
                         <TableCell scope="row" width={150}>
                           <Stack spacing={2}>
@@ -192,14 +199,16 @@ const TestManagement = () => {
                             >
                               View Test Data
                             </Button>
-                            <Button
-                              variant="outlined"
-                              color="error"
-                              size="small"
-                              onClick={() => handleDeleteTest(item)}
-                            >
-                              Delete
-                            </Button>
+                            {adminOnlyPermission ? (
+                              <Button
+                                variant="outlined"
+                                color="error"
+                                size="small"
+                                onClick={() => handleDeleteTest(item)}
+                              >
+                                Delete
+                              </Button>
+                            ) : null}
                           </Stack>
                         </TableCell>
                       </TableRow>
